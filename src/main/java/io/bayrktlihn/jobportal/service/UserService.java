@@ -70,35 +70,44 @@ public class UserService {
         return user;
     }
 
-    public User fetchUserByEmail(String email){
+    public User fetchUserByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Could not found user"));
         return user;
     }
 
-    public String fetchCurrentUserName(){
+    public User fetchCurrentUser() {
+        String userName = fetchCurrentUserName();
+        if (Objects.isNull(userName)) {
+            return null;
+        }
+
+        return fetchUserByEmail(userName);
+    }
+
+    public String fetchCurrentUserName() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
 
 
-        if(!(authentication instanceof AnonymousAuthenticationToken)){
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
             return authentication.getName();
         }
 
         return null;
     }
 
-    public Object fetchCurrentUserProfile(){
+    public Object fetchCurrentUserProfile() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
 
-        if(!(authentication instanceof AnonymousAuthenticationToken)){
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String userName = authentication.getName();
             User user = userRepository.findByEmail(userName).orElseThrow(() -> new UsernameNotFoundException("Could not found user"));
             boolean hasJobSeekerAuthority = authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("Job Seeker"));
             boolean hasRecruiterAuthority = authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("Recruiter"));
-            if(hasRecruiterAuthority){
+            if (hasRecruiterAuthority) {
                 return recruiterProfileRepository.findById(user.getId()).orElse(null);
-            } else if(hasJobSeekerAuthority){
+            } else if (hasJobSeekerAuthority) {
                 return jobSeekerProfileRepository.findById(user.getId()).orElse(null);
             }
         }

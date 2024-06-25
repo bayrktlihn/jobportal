@@ -71,6 +71,15 @@
             </li>
 
         </ul>
+
+        <img
+                class="rounded-circle me-3"
+                height="50px"
+                width="50x"
+                th:if="${userProfile.fetchPhotosImagePath()!=null}"
+                th:src="@{${userProfile?.fetchPhotosImagePath()}}"
+        />
+
         <label th:if="${userProfile.firstName != null && userProfile.lastName != null}"
                th:text="${userProfile.firstName+' '+userProfile.lastName}"
                class="nav-item nav-link px-2 me-3">
@@ -94,11 +103,11 @@
             <label class="large-label px-3 mb-3" sec:authorize="hasAuthority('Job Seeker')">Search Results</label>
             <th:block th:each="jobPost:${jobPost}">
                 <a
-                        th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}"
+                        th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostActivityUserId})}"
                         style="text-decoration: none; color: black"
                 >
                     <div
-                            onclick="window.location=/job-details-apply/{id}(id=${jobPost.jobPostId})"
+                            onclick="window.location=/job-details-apply/{id}(id=${jobPost.jobPostActivityUserId})"
                             class="job-row"
                     >
                         <div class="row">
@@ -127,13 +136,13 @@
                             </div>
                             <div class="col-md-4 text-center">
                                 <label
-                                        th:text="${jobPost.jobLocationId.city+', '+ jobPost.jobLocationId.state}"
+                                        th:text="${jobPost.jobLocation.city+', '+ jobPost.jobLocation.state}"
                                 >
                                     City State</label
                                 >
                             </div>
                             <div class="col-md-4 text-right">
-                                <label th:text="@{${jobPost.jobCompanyId.name}}"
+                                <label th:text="@{${jobPost.jobCompany.name}}"
                                 >Recruiter Company Name</label
                                 >
                             </div>

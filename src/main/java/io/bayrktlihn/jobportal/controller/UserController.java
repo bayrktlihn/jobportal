@@ -41,7 +41,7 @@ public class UserController {
     public String userRegistration(@Valid User user, Model model) {
         try {
             userService.addNew(user);
-            return "dashboard";
+            return "redirect:/dashboard/";
         } catch (MessageSupportedException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return register(model);

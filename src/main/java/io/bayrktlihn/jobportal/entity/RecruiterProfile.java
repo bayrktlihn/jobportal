@@ -32,4 +32,11 @@ public class RecruiterProfile {
     private String country;
     private String company;
     private String profilePhoto;
+
+    public String fetchPhotosImagePath() {
+        if(profilePhoto == null) {
+            return null;
+        }
+        return "/photos/recruiter/" + id + "/" + profilePhoto;
+    }
 }
